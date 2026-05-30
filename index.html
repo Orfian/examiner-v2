@@ -222,9 +222,13 @@
                             <span class="wheel-config-label">Center on screen</span>
                             <span class="sound-switch" id="wheelCenteredSwitch"></span>
                         </label>
-                        <label class="wheel-config-row wheel-config-toggle-row" id="wheelTimerRow" data-tooltip="Run a timer while a question is open">
+                        <label class="wheel-config-row wheel-config-toggle-row" id="wheelTimerRow" data-tooltip="Show a global timer and a per-question timer">
                             <span class="wheel-config-label">Timer</span>
                             <span class="sound-switch" id="wheelTimerSwitch"></span>
+                        </label>
+                        <label class="wheel-config-row wheel-config-toggle-row" id="wheelTimerContinuousRow" data-tooltip="On: global timer ticks continuously. Off: only counts while a question is open.">
+                            <span class="wheel-config-label">Count always</span>
+                            <span class="sound-switch" id="wheelTimerContinuousSwitch"></span>
                         </label>
                         <label class="wheel-config-row wheel-config-toggle-row" id="wheelMembersRow" data-tooltip="Track members answering each question — edit the roster with the people icon">
                             <span class="wheel-config-label">Members</span>
@@ -271,10 +275,18 @@
 
             <div class="uk-width-1-4@l uk-width-1-5@xl">
                 <div class="sidebar">
-                    <span class="section-title darker wheel-time-section" id="wheelTimeSection" hidden>Time</span>
-                    <span class="timer wheel-timer" id="wheelTimer" hidden>00 : 00</span>
-
+                    <div class="wheel-global-timer-box" id="wheelGlobalTimerBox" hidden>
+                        <span class="section-title darker wheel-global-timer-title">Total time
+                            <button class="pause-toggle-btn wheel-global-pause-btn" id="wheelGlobalPauseBtn" type="button" title="Pause/Continue total timer">⏸</button>
+                        </span>
+                        <span class="timer wheel-global-timer" id="wheelGlobalTimer">00 : 00</span>
+                        <span class="wheel-global-inq" id="wheelGlobalInQuestion" hidden>
+                            <span class="wheel-global-inq-label">in questions</span>
+                            <span class="wheel-global-inq-value" id="wheelGlobalInQuestionValue">00 : 00</span>
+                        </span>
+                    </div>
                     <span class="section-title darker">Questions
+                        <button class="wheel-stats-btn" id="wheelStatsBtn" title="Show rating statistics" hidden>📊</button>
                         <button class="wheel-showall-btn" id="wheelShowAllBtn" title="Hide all questions">⦸</button>
                         <button class="wheel-search-btn" id="wheelSearchBtn" title="Search questions"><span uk-icon="search"></span></button>
                         <button class="wheel-shuffle-header-btn" id="wheelShuffleBtn" title="Randomize wheel section order">⇄</button>
@@ -308,15 +320,25 @@
                     <button id="wheelModalHide" class="uk-button uk-button-danger" type="button">Hide question</button>
                 </div>
             </div>
-            <div id="wheelMembersPanel" hidden>
-                <div class="wheel-members-panel-header">
-                    <span>Members</span>
-                    <button type="button" id="wheelMembersRollBtn" class="wheel-members-roll-btn" title="Pick a random member who hasn't answered yet">Roll</button>
+            <div id="wheelModalSide" hidden>
+                <div id="wheelModalTimerBox" class="wheel-modal-timer-box" hidden>
+                    <span class="wheel-modal-timer-label">Question time</span>
+                    <span class="timer wheel-modal-timer" id="wheelModalTimer">00 : 00</span>
+                    <div class="wheel-modal-timer-controls">
+                        <button type="button" id="wheelModalTimerPauseBtn" class="wheel-modal-timer-btn" title="Pause/Continue">⏸</button>
+                        <button type="button" id="wheelModalTimerResetBtn" class="wheel-modal-timer-btn" title="Reset to 00 : 00">↺</button>
+                    </div>
                 </div>
-                <div id="wheelMembersRollResult" class="wheel-members-roll-result" hidden></div>
-                <div id="wheelMembersPanelList" class="wheel-members-panel-list"></div>
-                <div id="wheelMembersPanelEmpty" class="wheel-members-panel-empty" hidden>
-                    No members yet. Add some with the members button next to the gear icon.
+                <div id="wheelMembersPanel" hidden>
+                    <div class="wheel-members-panel-header">
+                        <span>Members</span>
+                        <button type="button" id="wheelMembersRollBtn" class="wheel-members-roll-btn" title="Pick a random member who hasn't answered yet">Roll</button>
+                    </div>
+                    <div id="wheelMembersRollResult" class="wheel-members-roll-result" hidden></div>
+                    <div id="wheelMembersPanelList" class="wheel-members-panel-list"></div>
+                    <div id="wheelMembersPanelEmpty" class="wheel-members-panel-empty" hidden>
+                        No members yet. Add some with the members button next to the gear icon.
+                    </div>
                 </div>
             </div>
         </div>
@@ -330,6 +352,18 @@
                 <button type="button" id="wheelMemberDetailClose" class="wheel-member-detail-close" title="Close">&times;</button>
             </div>
             <div id="wheelMemberDetailBody" class="wheel-member-detail-body"></div>
+        </div>
+    </div>
+
+    <!-- Rating statistics table -->
+    <div id="wheelStatsModal" hidden>
+        <div id="wheelStatsContent">
+            <div class="wheel-stats-header">
+                <span class="wheel-stats-title">Rating statistics</span>
+                <select id="wheelStatsSelect" class="wheel-stats-select" title="Show the global average or a single member"></select>
+                <button type="button" id="wheelStatsClose" class="wheel-member-detail-close" title="Close">&times;</button>
+            </div>
+            <div id="wheelStatsBody" class="wheel-stats-body"></div>
         </div>
     </div>
 

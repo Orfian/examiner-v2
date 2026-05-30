@@ -229,6 +229,17 @@ function getMemberAverageScore(qid) {
     return Math.round(avg * 2) / 2;
 }
 
+// Average rating a single member gave across all questions in `questions`.
+// Returns 0 when they haven't rated anything.
+function getMemberOverallAverage(memberId, questions) {
+    let vals = (questions || [])
+        .map(q => getMemberQuestionScore(q.id, memberId))
+        .filter(v => v > 0);
+    if (vals.length === 0) return 0;
+    let avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+    return Math.round(avg * 2) / 2;
+}
+
 
 // ── Session persistence ──────────────────────────────────────────────────────
 
